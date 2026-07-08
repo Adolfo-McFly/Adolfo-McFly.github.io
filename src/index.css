@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+
+@import "tailwindcss";
+
+html {
+  font-size: 14px; 
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #f8fafc;
+}
+
+/* Fondo optimizado para alto rendimiento (Sin filter: blur) */
+.bg-blobs {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.blob-1 {
+  position: absolute;
+  top: -10%; left: -10%;
+  width: 50vw; height: 50vw;
+  /* Usamos degradado en lugar de filtro de desenfoque */
+  background: radial-gradient(circle, rgba(147, 197, 253, 0.5) 0%, rgba(248, 250, 252, 0) 70%);
+  border-radius: 50%;
+  transform: translateZ(0); /* Activa la aceleración por hardware */
+  will-change: transform;
+}
+.blob-2 {
+  position: absolute;
+  top: 40%; right: -5%;
+  width: 45vw; height: 45vw;
+  background: radial-gradient(circle, rgba(191, 219, 254, 0.6) 0%, rgba(248, 250, 252, 0) 70%);
+  border-radius: 50%;
+  transform: translateZ(0);
+  will-change: transform;
+}
