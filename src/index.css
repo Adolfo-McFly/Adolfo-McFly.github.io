@@ -2,16 +2,29 @@
 
 @import "tailwindcss";
 
+/* Fuerza a Tailwind v4 a usar la clase .dark en vez de la preferencia del sistema */
+@variant dark (.dark &);
+
 html {
   font-size: 14px; 
+  scroll-behavior: smooth;
 }
 
 body {
   font-family: 'Inter', sans-serif;
-  background-color: #f8fafc;
+  @apply transition-colors duration-300 text-slate-800 dark:text-slate-100;
+  /* Fondo limpio y brillante en modo claro */
+  background: radial-gradient(circle at 50% 0%, #e2ebf0 0%, #f1f5f9 100%) no-repeat;
+  background-attachment: fixed;
 }
 
-/* Fondo optimizado para alto rendimiento (Sin filter: blur) */
+.dark body {
+  /* Fondo oscuro profundo en modo oscuro */
+  background: radial-gradient(circle at 50% 0%, #070e1b 0%, #02040a 100%) no-repeat !important;
+  background-attachment: fixed !important;
+}
+
+/* Fondo de blobs decorativos */
 .bg-blobs {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -19,22 +32,52 @@ body {
   overflow: hidden;
   pointer-events: none;
 }
+
 .blob-1 {
   position: absolute;
   top: -10%; left: -10%;
   width: 50vw; height: 50vw;
-  /* Usamos degradado en lugar de filtro de desenfoque */
-  background: radial-gradient(circle, rgba(147, 197, 253, 0.5) 0%, rgba(248, 250, 252, 0) 70%);
+  background: radial-gradient(circle, rgba(147, 197, 253, 0.45) 0%, rgba(248, 250, 252, 0) 70%);
   border-radius: 50%;
-  transform: translateZ(0); /* Activa la aceleración por hardware */
+  transform: translateZ(0);
   will-change: transform;
 }
+
 .blob-2 {
   position: absolute;
   top: 40%; right: -5%;
   width: 45vw; height: 45vw;
-  background: radial-gradient(circle, rgba(191, 219, 254, 0.6) 0%, rgba(248, 250, 252, 0) 70%);
+  background: radial-gradient(circle, rgba(191, 219, 254, 0.5) 0%, rgba(248, 250, 252, 0) 70%);
   border-radius: 50%;
   transform: translateZ(0);
   will-change: transform;
+}
+
+/* Variaciones de blobs en modo oscuro */
+.dark .blob-1 {
+  background: radial-gradient(circle, rgba(30, 58, 138, 0.3) 0%, rgba(3, 7, 18, 0) 70%) !important;
+}
+
+.dark .blob-2 {
+  background: radial-gradient(circle, rgba(67, 56, 202, 0.2) 0%, rgba(3, 7, 18, 0) 70%) !important;
+}
+
+/* ANIMACIÓN MARQUEE INFINITO SIN CORTES */
+@keyframes marquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 25s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
 }
