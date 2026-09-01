@@ -6,7 +6,7 @@ const translations = {
     langBtn: 'EN',
     subtitle: 'Ingeniero en Sistemas | Desarrollador Full-Stack',
     sectionDocumentation: 'Documentación',
-    btnDownloadCV: 'Ver CV',
+    btnDownloadCV: 'Ver CVv',
     btnDownloadLetter: 'Referencias',
     mainProjectsTitle: 'Proyectos Principales',
     otherWebsitesTitle: 'Otros Sitios Web',
@@ -14,7 +14,7 @@ const translations = {
     viewProject: 'Ver Proyecto',
     visitWeb: 'Visitar Sitio Web',
     footerText: '© 2026 Adolfo Pérez León. Creado con React y Tailwind CSS.',
-    
+
     // CV Sections
     aboutMeTitle: 'Sobre Mí',
     aboutMeText: 'Ingeniero en Sistemas y Comunicaciones enfocado en el desarrollo de software Full Stack y la resolución de problemas tecnológicos. Cuento con experiencia en el diseño, desarrollo e implementación de aplicaciones web. Poseo un dominio sólido en múltiples lenguajes de programación, frameworks y gestión de bases de datos SQL, complementado con experiencia práctica en soporte técnico, configuración de redes y automatización de procesos. Orientado a la resolución analítica de problemas, integrando herramientas de Inteligencia Artificial para optimizar procesos y entregar soluciones tecnológicas escalables y eficientes.',
@@ -24,7 +24,7 @@ const translations = {
     educationText: 'UAEM Valle de México (Agosto 2021 – Junio 2026) - Ingeniería en Sistemas y Comunicaciones. Egresado.',
     languagesTitle: 'Idiomas',
     languagesText: 'Español: Nativo. Inglés: Intermedio - Técnico.',
-    
+
     expList: [
       {
         title: 'Consultor JR / Desarrollador Full Stack',
@@ -97,7 +97,7 @@ const translations = {
     viewProject: 'View Project',
     visitWeb: 'Visit Website',
     footerText: '© 2026 Adolfo Pérez León. Built with React and Tailwind CSS.',
-    
+
     // CV Sections
     aboutMeTitle: 'About Me',
     aboutMeText: 'Systems and Communications Engineer focused on Full Stack software development and technical problem solving. Experienced in design, development, and implementation of web applications. Proficient in multiple programming languages, frameworks, and SQL databases, complemented by practical skills in tech support, networking, and process automation. Analytics-driven and oriented towards scalable and efficient technological solutions using AI integrations.',
@@ -107,7 +107,7 @@ const translations = {
     educationText: 'UAEM Valle de México (August 2021 – June 2026) - Systems and Communications Engineering. Graduated.',
     languagesTitle: 'Languages',
     languagesText: 'Spanish: Native. English: Intermediate - Technical.',
-    
+
     expList: [
       {
         title: 'Junior Consultant / Full Stack Developer',
@@ -246,7 +246,7 @@ function App() {
     const delta = e.deltaY < 0 ? 0.2 : -0.2;
     const newScale = Math.min(Math.max(1, scale + delta), 4);
     setScale(newScale);
-    
+
     if (newScale === 1) {
       setPosition({ x: 0, y: 0 });
     }
@@ -287,7 +287,7 @@ function App() {
 
   return (
     <div className="relative min-h-screen pb-16 font-sans transition-colors duration-300">
-      
+
       {/* Botones de control flotantes en la esquina superior derecha */}
       <div className="fixed top-6 right-6 z-40 flex items-center gap-3">
         {/* Modo Oscuro Toggle */}
@@ -308,7 +308,7 @@ function App() {
         </button>
 
         {/* Idioma Toggle */}
-        <button 
+        <button
           onClick={toggleLanguage}
           className="relative px-5 py-2.5 rounded-full font-bold text-slate-800 dark:text-slate-200 transition-all duration-300 backdrop-blur-xl bg-white/60 dark:bg-slate-900/40 border border-white/80 dark:border-slate-700/50 shadow-[0_8px_32px_rgba(31,38,135,0.06),inset_0_1px_1px_rgba(255,255,255,0.8)] hover:bg-white/85 dark:hover:bg-slate-800/60 hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-2 group overflow-hidden"
           title={lang === 'ES' ? 'Cambiar a Inglés' : 'Switch to Spanish'}
@@ -321,35 +321,34 @@ function App() {
 
       {/* --- MODAL PARA EXPANDIR IMÁGENES --- */}
       {imagenAmpliacion && (
-        <div 
+        <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-sm p-4 overflow-hidden"
-          onClick={handleClose} 
+          onClick={handleClose}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseUp}
         >
-          <button 
+          <button
             onClick={handleClose}
             className="absolute top-6 right-6 text-white text-5xl font-light hover:text-blue-400 transition-colors z-[60] cursor-pointer"
             title="Cerrar (Esc)"
           >
             &times;
           </button>
-          
+
           <div className="relative max-w-full max-h-full flex items-center justify-center overflow-visible">
-            <img 
-              src={imagenAmpliacion} 
-              alt="Vista ampliada" 
-              style={{ 
-                transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`, 
-                transition: isDragging ? 'none' : 'transform 0.1s ease-out' 
+            <img
+              src={imagenAmpliacion}
+              alt="Vista ampliada"
+              style={{
+                transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
+                transition: isDragging ? 'none' : 'transform 0.1s ease-out'
               }}
-              className={`max-w-[90vw] max-h-[90vh] object-contain rounded-2xl shadow-2xl select-none ${
-                scale === 1 ? 'cursor-zoom-in' : isDragging ? 'cursor-grabbing' : 'cursor-grab'
-              }`}
+              className={`max-w-[90vw] max-h-[90vh] object-contain rounded-2xl shadow-2xl select-none ${scale === 1 ? 'cursor-zoom-in' : isDragging ? 'cursor-grabbing' : 'cursor-grab'
+                }`}
               title={scale === 1 ? (lang === 'ES' ? 'Usa la rueda del mouse para hacer Zoom' : 'Use mouse wheel to zoom') : (lang === 'ES' ? 'Arrastra para moverte' : 'Drag to pan')}
               draggable={false}
-              onClick={(e) => e.stopPropagation()} 
+              onClick={(e) => e.stopPropagation()}
               onWheel={(e) => {
                 e.stopPropagation();
                 handleWheel(e);
@@ -373,13 +372,13 @@ function App() {
       {/* Cabecera */}
       <header className="pt-32 pb-12 px-4 text-center relative z-10">
         <div className="max-w-4xl mx-auto flex flex-col items-center">
-          
+
           {/* Foto de perfil con efecto Glowing Glass */}
           <div className="mb-8 relative group">
             <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
-            <img 
-              src="/imagenes/adolfo.jpg" 
-              alt="Adolfo Pérez León" 
+            <img
+              src="/imagenes/adolfo.jpg"
+              alt="Adolfo Pérez León"
               className="relative w-44 h-44 md:w-52 md:h-52 rounded-full object-cover border-4 border-white/80 dark:border-slate-800/80 shadow-2xl transition-transform duration-500 group-hover:scale-[1.03]"
             />
           </div>
@@ -390,51 +389,51 @@ function App() {
           <p className="text-xl md:text-2xl font-semibold text-blue-600 dark:text-blue-400 mb-10 max-w-2xl mx-auto">
             {t.subtitle}
           </p>
-          
+
           {/* Botones de redes y contacto principal (Cristal Esmerilado) */}
           <div className="flex flex-wrap justify-center items-center gap-3.5 mb-10">
             {/* WhatsApp */}
-            <a 
-              href="https://wa.me/525631896280" 
-              target="_blank" 
-              rel="noreferrer" 
+            <a
+              href="https://wa.me/525631896280"
+              target="_blank"
+              rel="noreferrer"
               className="inline-flex items-center justify-center font-bold px-5 py-3 rounded-full text-slate-700 dark:text-slate-200 transition-all duration-300 hover:-translate-y-1 backdrop-blur-lg bg-white/60 dark:bg-slate-900/40 border border-white/80 dark:border-slate-700/50 shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:text-green-600 dark:hover:text-green-400 hover:border-green-300"
             >
               <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
               </svg>
               WhatsApp
             </a>
-            
+
             {/* LinkedIn */}
-            <a 
-              href="https://www.linkedin.com/in/adolfo-león-3528a939a" 
-              target="_blank" 
-              rel="noreferrer" 
+            <a
+              href="https://www.linkedin.com/in/adolfo-león-3528a939a"
+              target="_blank"
+              rel="noreferrer"
               className="inline-flex items-center justify-center font-bold px-5 py-3 rounded-full text-slate-700 dark:text-slate-200 transition-all duration-300 hover:-translate-y-1 backdrop-blur-lg bg-white/60 dark:bg-slate-900/40 border border-white/80 dark:border-slate-700/50 shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:text-blue-600 dark:hover:text-blue-400 hover:border-blue-300"
             >
               <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
               </svg>
               LinkedIn
             </a>
 
             {/* GitHub */}
-            <a 
-              href="https://github.com/Adolfo-McFly" 
-              target="_blank" 
-              rel="noreferrer" 
+            <a
+              href="https://github.com/Adolfo-McFly"
+              target="_blank"
+              rel="noreferrer"
               className="inline-flex items-center justify-center font-bold px-5 py-3 rounded-full text-slate-700 dark:text-slate-200 transition-all duration-300 hover:-translate-y-1 backdrop-blur-lg bg-white/60 dark:bg-slate-900/40 border border-white/80 dark:border-slate-700/50 shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:text-slate-900 dark:hover:text-white hover:border-slate-400"
             >
               <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd"/>
+                <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
               </svg>
               GitHub
             </a>
 
             {/* Email */}
-            <a 
-              href="mailto:adolfopl55@gmail.com" 
+            <a
+              href="mailto:adolfopl55@gmail.com"
               className="inline-flex items-center justify-center font-bold px-5 py-3 rounded-full text-slate-700 dark:text-slate-200 transition-all duration-300 hover:-translate-y-1 backdrop-blur-lg bg-white/60 dark:bg-slate-900/40 border border-white/80 dark:border-slate-700/50 shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:text-blue-600 dark:hover:text-blue-400 hover:border-blue-300"
             >
               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
@@ -451,8 +450,8 @@ function App() {
             </h3>
             <div className="flex flex-wrap justify-center items-center gap-4">
               {/* Ver CV */}
-              <a 
-                href="/CV.pdf" 
+              <a
+                href="/CV.pdf"
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center justify-center font-bold px-6 py-2.5 rounded-full text-white transition-all duration-300 hover:-translate-y-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 shadow-md hover:shadow-indigo-500/20 cursor-pointer"
@@ -465,8 +464,8 @@ function App() {
               </a>
 
               {/* Referencias */}
-              <a 
-                href="/Referencias.pdf" 
+              <a
+                href="/Referencias.pdf"
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center justify-center font-bold px-6 py-2.5 rounded-full text-slate-700 dark:text-slate-200 transition-all duration-300 hover:-translate-y-0.5 backdrop-blur-lg bg-white/50 dark:bg-slate-900/50 border border-white/60 dark:border-slate-700/60 hover:bg-white/80 dark:hover:bg-slate-800/80 shadow-sm hover:shadow-md cursor-pointer"
@@ -491,21 +490,21 @@ function App() {
               {t.specialtyTitle}
             </h2>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {t.specialties.map((spec, idx) => (
-              <div 
+              <div
                 key={idx}
                 onMouseMove={handleMouseMoveGlow}
                 className="relative bg-white/40 dark:bg-slate-900/40 rounded-3xl p-8 shadow-[0_15px_35px_rgba(0,0,0,0.03),inset_0_1px_1px_rgba(255,255,255,0.8)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] border border-white/50 dark:border-slate-700/50 hover:-translate-y-2 hover:shadow-[0_20px_45px_rgba(0,0,0,0.07)] transition-all duration-500 group flex flex-col justify-between cursor-default"
               >
-                <div 
+                <div
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-3xl"
                   style={{
                     background: `radial-gradient(350px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(59, 130, 246, 0.12), transparent 80%)`
                   }}
                 />
-                
+
                 <div className="relative z-10">
                   {/* Icono representativo */}
                   <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-6 bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 backdrop-blur-sm">
@@ -539,13 +538,13 @@ function App() {
             ))}
           </div>
         </section>
-        
+
         {/* Nueva Estructura del CV */}
         <section className="mb-24 max-w-4xl mx-auto">
           <div className="space-y-6">
-            
+
             {/* Sobre Mí */}
-            <div 
+            <div
               onMouseMove={handleMouseMoveGlow}
               className="relative rounded-3xl p-8 backdrop-blur-xl bg-white/40 dark:bg-slate-900/40 border border-white/60 dark:border-slate-700/50 shadow-[0_8px_32px_rgba(31,38,135,0.04),inset_0_1px_1px_rgba(255,255,255,0.6)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] transition-all duration-300 group cursor-default"
             >
@@ -561,7 +560,7 @@ function App() {
             </div>
 
             {/* Habilidades */}
-            <div 
+            <div
               onMouseMove={handleMouseMoveGlow}
               className="relative rounded-3xl p-8 backdrop-blur-xl bg-white/40 dark:bg-slate-900/40 border border-white/60 dark:border-slate-700/50 shadow-[0_8px_32px_rgba(31,38,135,0.04),inset_0_1px_1px_rgba(255,255,255,0.6)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] transition-all duration-300 group cursor-default"
             >
@@ -570,15 +569,15 @@ function App() {
                 <h3 className="text-2xl font-extrabold text-slate-800 dark:text-white mb-5">
                   {t.skillsTitle}
                 </h3>
-                
+
                 <div className="space-y-4">
                   {skillsCategories.map((cat, categoryIdx) => (
                     <div key={categoryIdx}>
                       <h5 className="text-sm font-bold text-slate-400 mb-2 uppercase tracking-wider">{cat.name}</h5>
                       <div className="flex flex-wrap gap-2.5">
                         {cat.items.map((skill) => (
-                          <span 
-                            key={skill} 
+                          <span
+                            key={skill}
                             className="px-4 py-2 rounded-full text-sm font-bold text-slate-700 dark:text-slate-200 backdrop-blur-md bg-white/50 dark:bg-slate-800/50 border border-white/60 dark:border-slate-700/60 shadow-sm"
                           >
                             {skill}
@@ -592,7 +591,7 @@ function App() {
             </div>
 
             {/* Experiencia Laboral */}
-            <div 
+            <div
               onMouseMove={handleMouseMoveGlow}
               className="relative rounded-3xl p-8 backdrop-blur-xl bg-white/40 dark:bg-slate-900/40 border border-white/60 dark:border-slate-700/50 shadow-[0_8px_32px_rgba(31,38,135,0.04),inset_0_1px_1px_rgba(255,255,255,0.6)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] transition-all duration-300 group cursor-default"
             >
@@ -622,7 +621,7 @@ function App() {
             </div>
 
             {/* Educación */}
-            <div 
+            <div
               onMouseMove={handleMouseMoveGlow}
               className="relative rounded-3xl p-8 backdrop-blur-xl bg-white/40 dark:bg-slate-900/40 border border-white/60 dark:border-slate-700/50 shadow-[0_8px_32px_rgba(31,38,135,0.04),inset_0_1px_1px_rgba(255,255,255,0.6)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] transition-all duration-300 group cursor-default"
             >
@@ -638,7 +637,7 @@ function App() {
             </div>
 
             {/* Idiomas */}
-            <div 
+            <div
               onMouseMove={handleMouseMoveGlow}
               className="relative rounded-3xl p-8 backdrop-blur-xl bg-white/40 dark:bg-slate-900/40 border border-white/60 dark:border-slate-700/50 shadow-[0_8px_32px_rgba(31,38,135,0.04),inset_0_1px_1px_rgba(255,255,255,0.6)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] transition-all duration-300 group cursor-default"
             >
@@ -663,30 +662,30 @@ function App() {
               {t.mainProjectsTitle}
             </h2>
           </div>
-          
+
           {/* Proyecto 1: NedimiPOS Cloud */}
-          <div 
+          <div
             onMouseMove={handleMouseMoveGlow}
             className="relative rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.04),inset_0_1px_1px_rgba(255,255,255,0.8)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] hover:shadow-[0_25px_60px_rgba(0,0,0,0.08)] overflow-hidden flex flex-col lg:flex-row mb-12 transition-all duration-500 hover:-translate-y-1.5 backdrop-blur-xl bg-white/40 dark:bg-slate-900/40 border border-white/50 dark:border-slate-700/50 group cursor-default"
           >
-            <div 
+            <div
               className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-[2.5rem]"
               style={{
                 background: `radial-gradient(500px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(59, 130, 246, 0.15), transparent 80%)`
               }}
             />
 
-            <div 
-              className="lg:w-3/5 overflow-hidden bg-slate-50/20 dark:bg-slate-950/20 flex items-center justify-center p-6 lg:p-8 cursor-pointer relative z-10" 
+            <div
+              className="lg:w-3/5 overflow-hidden bg-slate-50/20 dark:bg-slate-950/20 flex items-center justify-center p-6 lg:p-8 cursor-pointer relative z-10"
               onClick={() => setImagenAmpliacion('/imagenes/nedimipos.png')}
             >
-              <img 
-                src="/imagenes/nedimipos.png" 
-                alt="NedimiPOS System" 
-                className="w-full h-auto rounded-2xl shadow-[0_15px_30px_rgba(0,0,0,0.06)] transition-transform duration-700 group-hover:scale-[1.02]" 
-                title={lang === 'ES' ? 'Clic para ampliar' : 'Click to enlarge'} 
-                draggable={false} 
-                data-visualsearch="false" 
+              <img
+                src="/imagenes/nedimipos.png"
+                alt="NedimiPOS System"
+                className="w-full h-auto rounded-2xl shadow-[0_15px_30px_rgba(0,0,0,0.06)] transition-transform duration-700 group-hover:scale-[1.02]"
+                title={lang === 'ES' ? 'Clic para ampliar' : 'Click to enlarge'}
+                draggable={false}
+                data-visualsearch="false"
               />
             </div>
 
@@ -708,10 +707,10 @@ function App() {
                 <span className="text-blue-600 dark:text-blue-400">{t.techLabel}</span> PHP, JavaScript, SQL
               </p>
               <div className="flex">
-                <a 
-                  href="https://nedimipos.com/puntodeventa/" 
-                  target="_blank" 
-                  rel="noreferrer" 
+                <a
+                  href="https://nedimipos.com/puntodeventa/"
+                  target="_blank"
+                  rel="noreferrer"
                   className="inline-flex items-center justify-center bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-extrabold px-8 py-3.5 rounded-full hover:from-blue-500 hover:to-indigo-500 transition-all duration-300 shadow-lg hover:shadow-indigo-500/20 hover:scale-[1.03]"
                 >
                   {t.viewProject}
@@ -721,28 +720,28 @@ function App() {
           </div>
 
           {/* Proyecto 2: NedimiPOS Landing & Payments */}
-          <div 
+          <div
             onMouseMove={handleMouseMoveGlow}
             className="relative rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.04),inset_0_1px_1px_rgba(255,255,255,0.8)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] hover:shadow-[0_25px_60px_rgba(0,0,0,0.08)] overflow-hidden flex flex-col lg:flex-row-reverse mb-12 transition-all duration-500 hover:-translate-y-1.5 backdrop-blur-xl bg-white/40 dark:bg-slate-900/40 border border-white/50 dark:border-slate-700/50 group cursor-default"
           >
-            <div 
+            <div
               className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-[2.5rem]"
               style={{
                 background: `radial-gradient(99px 102px 241px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(99, 102, 241, 0.15), transparent 80%)`
               }}
             />
 
-            <div 
-              className="lg:w-3/5 overflow-hidden bg-slate-50/20 dark:bg-slate-950/20 flex items-center justify-center p-6 lg:p-8 cursor-pointer relative z-10" 
+            <div
+              className="lg:w-3/5 overflow-hidden bg-slate-50/20 dark:bg-slate-950/20 flex items-center justify-center p-6 lg:p-8 cursor-pointer relative z-10"
               onClick={() => setImagenAmpliacion('/imagenes/nedimi-web.png')}
             >
-              <img 
-                src="/imagenes/nedimi-web.png" 
-                alt="NedimiPOS Landing" 
-                className="w-full h-auto rounded-2xl shadow-[0_15px_30px_rgba(0,0,0,0.06)] transition-transform duration-700 group-hover:scale-[1.02]" 
-                title={lang === 'ES' ? 'Clic para ampliar' : 'Click to enlarge'} 
-                draggable={false} 
-                data-visualsearch="false" 
+              <img
+                src="/imagenes/nedimi-web.png"
+                alt="NedimiPOS Landing"
+                className="w-full h-auto rounded-2xl shadow-[0_15px_30px_rgba(0,0,0,0.06)] transition-transform duration-700 group-hover:scale-[1.02]"
+                title={lang === 'ES' ? 'Clic para ampliar' : 'Click to enlarge'}
+                draggable={false}
+                data-visualsearch="false"
               />
             </div>
 
@@ -764,10 +763,10 @@ function App() {
                 <span className="text-blue-600 dark:text-blue-400">{t.techLabel}</span> Stripe API, PHP, SQL, Frontend
               </p>
               <div className="flex">
-                <a 
-                  href="https://nedimipos.com/" 
-                  target="_blank" 
-                  rel="noreferrer" 
+                <a
+                  href="https://nedimipos.com/"
+                  target="_blank"
+                  rel="noreferrer"
                   className="inline-flex items-center justify-center bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-extrabold px-8 py-3.5 rounded-full hover:from-blue-500 hover:to-indigo-500 transition-all duration-300 shadow-lg hover:shadow-indigo-500/20 hover:scale-[1.03]"
                 >
                   {t.visitWeb}
@@ -784,21 +783,21 @@ function App() {
               {t.otherWebsitesTitle}
             </h2>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            
+
             {/* Tarjeta 1: The Money Bridge */}
-            <div 
+            <div
               onMouseMove={handleMouseMoveGlow}
               className="relative bg-white/40 dark:bg-slate-900/40 rounded-3xl p-8 shadow-[0_15px_35px_rgba(0,0,0,0.03),inset_0_1px_1px_rgba(255,255,255,0.8)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] border border-white/50 dark:border-slate-700/50 hover:-translate-y-2 hover:shadow-[0_20px_45px_rgba(0,0,0,0.07)] transition-all duration-500 group flex flex-col justify-between cursor-default"
             >
-              <div 
+              <div
                 className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-3xl"
                 style={{
                   background: `radial-gradient(350px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(59, 130, 246, 0.12), transparent 80%)`
                 }}
               />
-              
+
               <div className="relative z-10">
                 <h4 className="text-2xl font-extrabold text-slate-800 dark:text-white mb-3 tracking-tight">
                   {t.projects.moneyBridge.title}
@@ -811,10 +810,10 @@ function App() {
                 <p className="text-xs font-extrabold text-indigo-600 dark:text-indigo-400 tracking-wide uppercase mb-4">
                   React • UI/UX Design • Tailwind CSS
                 </p>
-                <a 
-                  href="https://www.themoneybridge.com.mx/" 
-                  target="_blank" 
-                  rel="noreferrer" 
+                <a
+                  href="https://www.themoneybridge.com.mx/"
+                  target="_blank"
+                  rel="noreferrer"
                   className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-indigo-600 dark:hover:text-indigo-400 font-extrabold text-sm relative group/link cursor-pointer"
                 >
                   {t.visitWeb}
@@ -826,17 +825,17 @@ function App() {
             </div>
 
             {/* Tarjeta 2: EsoftPasion */}
-            <div 
+            <div
               onMouseMove={handleMouseMoveGlow}
               className="relative bg-white/40 dark:bg-slate-900/40 rounded-3xl p-8 shadow-[0_15px_35px_rgba(0,0,0,0.03),inset_0_1px_1px_rgba(255,255,255,0.8)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] border border-white/50 dark:border-slate-700/50 hover:-translate-y-2 hover:shadow-[0_20px_45px_rgba(0,0,0,0.07)] transition-all duration-500 group flex flex-col justify-between cursor-default"
             >
-              <div 
+              <div
                 className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-3xl"
                 style={{
                   background: `radial-gradient(350px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(59, 130, 246, 0.12), transparent 80%)`
                 }}
               />
-              
+
               <div className="relative z-10">
                 <h4 className="text-2xl font-extrabold text-slate-800 dark:text-white mb-3 tracking-tight">
                   {t.projects.esoftpasion.title}
@@ -849,10 +848,10 @@ function App() {
                 <p className="text-xs font-extrabold text-indigo-600 dark:text-indigo-400 tracking-wide uppercase mb-4">
                   React • UI/UX Design • Tailwind CSS
                 </p>
-                <a 
-                  href="https://esoftpasion.com/" 
-                  target="_blank" 
-                  rel="noreferrer" 
+                <a
+                  href="https://esoftpasion.com/"
+                  target="_blank"
+                  rel="noreferrer"
                   className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-indigo-600 dark:hover:text-indigo-400 font-extrabold text-sm relative group/link cursor-pointer"
                 >
                   {t.visitWeb}
@@ -864,17 +863,17 @@ function App() {
             </div>
 
             {/* Tarjeta 3: Nedimi */}
-            <div 
+            <div
               onMouseMove={handleMouseMoveGlow}
               className="relative bg-white/40 dark:bg-slate-900/40 rounded-3xl p-8 shadow-[0_15px_35px_rgba(0,0,0,0.03),inset_0_1px_1px_rgba(255,255,255,0.8)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] border border-white/50 dark:border-slate-700/50 hover:-translate-y-2 hover:shadow-[0_20px_45px_rgba(0,0,0,0.07)] transition-all duration-500 group flex flex-col justify-between cursor-default"
             >
-              <div 
+              <div
                 className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-3xl"
                 style={{
                   background: `radial-gradient(350px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(59, 130, 246, 0.12), transparent 80%)`
                 }}
               />
-              
+
               <div className="relative z-10">
                 <h4 className="text-2xl font-extrabold text-slate-800 dark:text-white mb-3 tracking-tight">
                   {t.projects.nedimi.title}
@@ -887,10 +886,10 @@ function App() {
                 <p className="text-xs font-extrabold text-indigo-600 dark:text-indigo-400 tracking-wide uppercase mb-4">
                   React • UI/UX Design • Tailwind CSS
                 </p>
-                <a 
-                  href="https://nedimi.com/" 
-                  target="_blank" 
-                  rel="noreferrer" 
+                <a
+                  href="https://nedimi.com/"
+                  target="_blank"
+                  rel="noreferrer"
                   className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-indigo-600 dark:hover:text-indigo-400 font-extrabold text-sm relative group/link cursor-pointer"
                 >
                   {t.visitWeb}
@@ -902,17 +901,17 @@ function App() {
             </div>
 
             {/* Tarjeta 4: Dolphin Nedimi */}
-            <div 
+            <div
               onMouseMove={handleMouseMoveGlow}
               className="relative bg-white/40 dark:bg-slate-900/40 rounded-3xl p-8 shadow-[0_15px_35px_rgba(0,0,0,0.03),inset_0_1px_1px_rgba(255,255,255,0.8)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] border border-white/50 dark:border-slate-700/50 hover:-translate-y-2 hover:shadow-[0_20px_45px_rgba(0,0,0,0.07)] transition-all duration-500 group flex flex-col justify-between cursor-default"
             >
-              <div 
+              <div
                 className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-3xl"
                 style={{
                   background: `radial-gradient(350px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(59, 130, 246, 0.12), transparent 80%)`
                 }}
               />
-              
+
               <div className="relative z-10">
                 <h4 className="text-2xl font-extrabold text-slate-800 dark:text-white mb-3 tracking-tight">
                   {t.projects.dolphinNedimi.title}
@@ -925,10 +924,10 @@ function App() {
                 <p className="text-xs font-extrabold text-indigo-600 dark:text-indigo-400 tracking-wide uppercase mb-4">
                   React • UI/UX Design • Tailwind CSS
                 </p>
-                <a 
-                  href="https://v2dolphin.nedimi.com/" 
-                  target="_blank" 
-                  rel="noreferrer" 
+                <a
+                  href="https://v2dolphin.nedimi.com/"
+                  target="_blank"
+                  rel="noreferrer"
                   className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-indigo-600 dark:hover:text-indigo-400 font-extrabold text-sm relative group/link cursor-pointer"
                 >
                   {t.visitWeb}
@@ -942,7 +941,7 @@ function App() {
           </div>
         </section>
       </main>
-      
+
       {/* Footer */}
       <footer className="text-center py-10 text-slate-400 dark:text-slate-500 text-sm relative z-20">
         <p className="bg-white/30 dark:bg-slate-900/30 backdrop-blur-md px-6 py-2 rounded-full border border-white/40 dark:border-slate-800/40 inline-block shadow-sm">
