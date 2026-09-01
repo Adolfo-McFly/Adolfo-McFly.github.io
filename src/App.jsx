@@ -6,7 +6,7 @@ const translations = {
     langBtn: 'EN',
     subtitle: 'Ingeniero en Sistemas | Desarrollador Full-Stack',
     sectionDocumentation: 'Documentación',
-    btnDownloadCV: 'Ver CVv',
+    btnDownloadCV: 'Ver CV',
     btnDownloadLetter: 'Referencias',
     mainProjectsTitle: 'Proyectos Principales',
     otherWebsitesTitle: 'Otros Sitios Web',
