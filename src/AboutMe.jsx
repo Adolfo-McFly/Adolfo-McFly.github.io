@@ -3,6 +3,7 @@ import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 export default function AboutMe({ title, text, handleMouseMoveGlow }) {
   const ref = useRef(null);
+  const initialOrientation = useRef({ beta: null, gamma: null });
   const [isMobile, setIsMobile] = useState(false);
   
   // Motion values for tracking rotation directly
@@ -21,14 +22,23 @@ export default function AboutMe({ title, text, handleMouseMoveGlow }) {
       const handleOrientation = (event) => {
         if (event.beta === null || event.gamma === null) return;
         
+        if (initialOrientation.current.beta === null) {
+          initialOrientation.current.beta = event.beta;
+          initialOrientation.current.gamma = event.gamma;
+          return;
+        }
+        
         // Limita matemáticamente los valores para evitar que dé la vuelta completa
         const clamp = (val, min, max) => Math.max(min, Math.min(max, val));
         
+        // Movimiento relativo respecto a la orientación inicial
+        const deltaBeta = event.beta - initialOrientation.current.beta;
+        const deltaGamma = event.gamma - initialOrientation.current.gamma;
+        
         // beta es la inclinación adelante/atrás (-180 a 180)
-        // Restamos ~45 grados asumiendo una postura típica al sostener el móvil
-        const betaVal = clamp(event.beta - 45, -25, 25);
+        const betaVal = clamp(deltaBeta, -25, 25);
         // gamma es la inclinación izquierda/derecha (-90 a 90)
-        const gammaVal = clamp(event.gamma, -25, 25);
+        const gammaVal = clamp(deltaGamma, -25, 25);
         
         // Eje X se controla con beta, eje Y con gamma
         rawRotateX.set(-betaVal);
