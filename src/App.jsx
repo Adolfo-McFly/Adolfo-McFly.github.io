@@ -711,7 +711,7 @@ function App() {
               tags={t.projects.nedimiPosCloud.tags.concat(['PHP', 'JavaScript', 'SQL'])}
               delay={0.1}
               imageSrc="/imagenes/nedimipos.png"
-              link="https://nedimipos.com"
+              link="https://nedimipos.com/puntodeventa"
               linkText={t.visitWeb}
               onImageClick={() => setImagenAmpliacion('/imagenes/nedimipos.png')}
             />
@@ -740,7 +740,7 @@ function App() {
                 description={t.projects.moneyBridge.description}
                 tags={['React', 'UI/UX Design', 'Tailwind CSS']}
                 delay={0.1}
-                link="#"
+                link="https://www.themoneybridge.com.mx"
                 linkText={t.visitWeb}
               />
             </TiltWrapper>
@@ -750,7 +750,7 @@ function App() {
                 description={t.projects.esoftpasion.description}
                 tags={['React', 'UI/UX Design', 'Tailwind CSS']}
                 delay={0.2}
-                link="#"
+                link="https://esoftpasion.com"
                 linkText={t.visitWeb}
               />
             </TiltWrapper>
@@ -760,7 +760,7 @@ function App() {
                 description={t.projects.nedimi.description}
                 tags={['React', 'UI/UX Design', 'Tailwind CSS']}
                 delay={0.1}
-                link="#"
+                link="https://nedimi.com"
                 linkText={t.visitWeb}
               />
             </TiltWrapper>
@@ -770,7 +770,7 @@ function App() {
                 description={t.projects.dolphinNedimi.description}
                 tags={['React', 'UI/UX Design', 'Tailwind CSS']}
                 delay={0.2}
-                link="#"
+                link="https://v2dolphin.nedimi.com"
                 linkText={t.visitWeb}
               />
             </TiltWrapper>
