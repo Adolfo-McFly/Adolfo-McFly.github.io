@@ -81,3 +81,201 @@ body {
 .animate-marquee:hover {
   animation-play-state: paused;
 }
+
+/* BACKGROUND PARTICLES */
+@keyframes float-particle {
+  0% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translate(var(--dir-x), var(--dir-y)) rotate(360deg); opacity: 0; }
+}
+
+@keyframes pop-bubble {
+  0% { transform: scale(1); opacity: 1; filter: blur(0px); }
+  40% { transform: scale(1.8); opacity: 0.7; filter: blur(1px); }
+  100% { transform: scale(2.5); opacity: 0; filter: blur(4px); }
+}
+.pop-bubble {
+  animation: pop-bubble 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
+}
+
+/* TYPEWRITER ANIMATION */
+.typewriter {
+  overflow: hidden;
+  border-right: .15em solid rgba(59, 130, 246, 0.7);
+  white-space: nowrap;
+  animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+}
+
+.typewriter-delayed {
+  overflow: hidden;
+  border-right: .15em solid rgba(59, 130, 246, 0.7);
+  white-space: nowrap;
+  animation: typing 3.5s steps(40, end) 1s both, blink-caret .75s step-end infinite;
+}
+
+@keyframes typing {
+  from { width: 0; opacity: 0; }
+  1% { opacity: 1; }
+  to { width: 100%; opacity: 1; }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: rgba(59, 130, 246, 0.7); }
+}
+
+/* GLOW PULSE */
+@keyframes glow-pulse {
+  0%, 100% {
+    text-shadow: 0 0 15px rgba(59, 130, 246, 0.8), 0 0 30px rgba(59, 130, 246, 0.4);
+    opacity: 1;
+  }
+  50% {
+    text-shadow: 0 0 2px rgba(59, 130, 246, 0.1);
+    opacity: 0.6;
+  }
+}
+.animate-glow-pulse {
+  animation: glow-pulse 4s ease-in-out infinite;
+}
+
+/* CARD CONTINUOUS ROTATION/SCALE */
+@keyframes float-rotate {
+  0%, 100% { transform: translateY(0) rotate(-1deg) scale(1); }
+  50% { transform: translateY(-8px) rotate(1deg) scale(1.02); }
+}
+.animate-float-rotate {
+  animation: float-rotate 6s ease-in-out infinite;
+}
+
+/* ORGANIC FLOAT ANIMATION FOR ABOUT ME IMAGE */
+@keyframes organic-float {
+  0% {
+    transform: translateY(0px) rotate(-1deg);
+  }
+  50% {
+    transform: translateY(-15px) rotate(1deg);
+  }
+  100% {
+    transform: translateY(0px) rotate(-1deg);
+  }
+}
+.animate-organic-float {
+  animation: organic-float 4s ease-in-out infinite;
+}
+
+/* SCANNER ANIMATIONS */
+@keyframes scan {
+  0% { top: -10%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 110%; opacity: 0; }
+}
+@keyframes ping-pong {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+/* SLIDE ANIMATION */
+.slide-in-right {
+  opacity: 0;
+  transform: translateX(100px);
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.slide-in-right.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* BUTTON BUILD ANIMATION */
+.build-btn {
+  /* Initial state */
+}
+.build-text {
+  color: currentColor; /* Initially blue based on classes */
+  transition: color 0.3s ease 0.4s;
+}
+.build-btn:hover .build-text {
+  color: white; /* After border draws, text becomes white */
+}
+.build-border {
+  stroke-dasharray: 400;
+  stroke-dashoffset: 400;
+  transition: stroke-dashoffset 0.4s ease;
+}
+.build-btn:hover .build-border {
+  stroke-dashoffset: 0;
+}
+.build-fill {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease 0.7s;
+}
+.build-btn:hover .build-fill {
+  transform: scaleX(1);
+}
+
+/* SVG BUTTON ANIMATIONS */
+/* WhatsApp & GitHub Tracing */
+.whatsapp-stroke, .github-stroke {
+  stroke-dasharray: 400;
+  stroke-dashoffset: 400;
+}
+.whatsapp-fill, .github-fill {
+  opacity: 1;
+}
+.group:hover .whatsapp-stroke, .group:hover .github-stroke {
+  animation: draw-whatsapp-stroke 2s ease-in-out forwards;
+}
+.group:hover .whatsapp-fill, .group:hover .github-fill {
+  /* Instantly hide, then fade back in after drawing */
+  opacity: 0;
+  animation: fade-whatsapp-fill 0.5s 2s forwards;
+}
+@keyframes draw-whatsapp-stroke {
+  0% { stroke-dashoffset: 400; }
+  100% { stroke-dashoffset: 0; }
+}
+@keyframes fade-whatsapp-fill {
+  to { opacity: 1; }
+}
+
+/* LinkedIn */
+.linkedin-bg {
+  transform-origin: center;
+  transform: scale(1);
+}
+.linkedin-letters {
+  transform: translateY(0);
+  opacity: 1;
+}
+.group:hover .linkedin-bg {
+  animation: linkedin-assemble-bg 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+.group:hover .linkedin-letters {
+  animation: linkedin-assemble-letters 0.4s ease 0.4s backwards;
+}
+@keyframes linkedin-assemble-bg {
+  0% { transform: scale(0); }
+  100% { transform: scale(1); }
+}
+@keyframes linkedin-assemble-letters {
+  0% { transform: translateY(10px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+/* GitHub */
+.github-tail {
+  /* transform-origin set via tailwind class */
+}
+.group:hover .github-tail {
+  animation: octocat-wave 560ms ease-in-out infinite;
+}
+@keyframes octocat-wave {
+  0%, 100% { transform: rotate(0); }
+  20%, 60% { transform: rotate(-25deg); }
+  40%, 80% { transform: rotate(10deg); }
+}

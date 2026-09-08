@@ -1,4 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
+import ParticlesBackground from './ParticlesBackground';
+import ProfileScanner from './ProfileScanner';
+import TechnicalSkills from './TechnicalSkills';
+import NavBar from './NavBar';
+import ProjectCard from './ProjectCard';
+import AboutMe from './AboutMe';
+import TiltWrapper from './TiltWrapper';
 
 // DICCIONARIO DE TRADUCCIONES (ESPAÑOL / INGLÉS)
 const translations = {
@@ -64,7 +72,7 @@ const translations = {
       },
       nedimiPosLanding: {
         title: 'NedimiPOS - Landing & Pagos',
-        description: 'Desarrollo del sitio web oficial. Implementé la conexión segura del formulario de contacto y registro hacia el servidor y la base de datos SQL. Además, realicé la integración con la API de Stripe para gestionar los pagos y suscripciones de los planes.',
+        description: 'Desarrollo del sitio web oficial. Implementé la conexión segura del formulario de contacto y registro hacia el servidor y la base de datos SQL. Además, realicé la integración con la API de Stripe para gestionar los pagos y suscripciones de los planes. Este proyecto representa una solución integral que abarca desde la recolección de clientes potenciales hasta el procesamiento de pagos automatizados, asegurando una experiencia de usuario fluida, optimizada y completamente segura.',
         tags: ['Web Corporativa', 'Stripe API']
       },
       moneyBridge: {
@@ -193,6 +201,37 @@ function App() {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [heroState, setHeroState] = useState('typewriter');
+
+  useEffect(() => {
+    // 4-step animation sequence for hero name
+    const t1 = setTimeout(() => setHeroState('typewriter-bracket'), 3500); // Add "}"
+    const t2 = setTimeout(() => setHeroState('deleting-bracket'), 4500); // Delete "}"
+    const t3 = setTimeout(() => setHeroState('glow'), 5000); // Start glow
+
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); }
+  }, []);
+
+  // Intersection Observer for Slide Animations
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    const hiddenElements = document.querySelectorAll('.slide-in-right');
+    hiddenElements.forEach((el) => observer.observe(el));
+
+    return () => {
+      hiddenElements.forEach((el) => observer.unobserve(el));
+    };
+  }, []);
 
   const t = translations[lang];
 
@@ -270,13 +309,13 @@ function App() {
       });
     }
   };
-
   const handleMouseUp = () => {
     setIsDragging(false);
   };
 
   // Manejador del cursor glow dinámico para las tarjetas
   const handleMouseMoveGlow = (e) => {
+    if (e.buttons > 0) return;
     const card = e.currentTarget;
     const rect = card.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -287,6 +326,7 @@ function App() {
 
   return (
     <div className="relative min-h-screen pb-16 font-sans transition-colors duration-300">
+      <NavBar lang={lang} />
 
       {/* Botones de control flotantes en la esquina superior derecha */}
       <div className="fixed top-6 right-6 z-40 flex items-center gap-3">
@@ -363,31 +403,34 @@ function App() {
         </div>
       )}
 
-      {/* Fondo de manchas optimizado */}
-      <div className="bg-blobs">
-        <div className="blob-1"></div>
-        <div className="blob-2"></div>
-      </div>
+      {/* Fondo de partículas */}
+      <ParticlesBackground />
 
       {/* Cabecera */}
-      <header className="pt-32 pb-12 px-4 text-center relative z-10">
+      <header id="hero" className="pt-32 pb-12 px-4 text-center relative z-10">
         <div className="max-w-4xl mx-auto flex flex-col items-center">
 
-          {/* Foto de perfil con efecto Glowing Glass */}
-          <div className="mb-8 relative group">
-            <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
-            <img
-              src="/imagenes/adolfo.jpg"
-              alt="Adolfo Pérez León"
-              className="relative w-44 h-44 md:w-52 md:h-52 rounded-full object-cover border-4 border-white/80 dark:border-slate-800/80 shadow-2xl transition-transform duration-500 group-hover:scale-[1.03]"
-            />
+          {/* Foto de perfil */}
+          <div className="mb-8 flex justify-center">
+            <TiltWrapper className="relative group rounded-full">
+              <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
+              <ProfileScanner
+                src="/imagenes/adolfo.jpg"
+                alt="Adolfo Pérez León"
+                className="relative w-44 h-44 md:w-52 md:h-52 rounded-full border-4 border-white/80 dark:border-slate-800/80 shadow-2xl transition-transform duration-500 group-hover:scale-[1.03]"
+                draggable={false}
+              />
+            </TiltWrapper>
           </div>
 
-          <h1 className="text-5xl md:text-7xl font-extrabold mb-4 tracking-tight text-slate-900 dark:text-white drop-shadow-[0_2px_4px_rgba(255,255,255,0.4)] dark:drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]">
-            Adolfo Pérez León
+          <h1 className={`text-5xl md:text-7xl font-extrabold mb-4 tracking-tight text-slate-900 dark:text-white drop-shadow-[0_2px_4px_rgba(255,255,255,0.4)] dark:drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)] ${heroState === 'glow' ? 'animate-glow-pulse' : ''}`}>
+            {heroState === 'typewriter' && <span className="inline-block typewriter pr-1">Adolfo Pérez León</span>}
+            {heroState === 'typewriter-bracket' && <span className="inline-block pr-1 border-r-[0.15em] border-blue-500/70 animate-[blink-caret_.75s_step-end_infinite]">Adolfo Pérez León{'}'}</span>}
+            {heroState === 'deleting-bracket' && <span className="inline-block pr-1 border-r-[0.15em] border-blue-500/70 animate-[blink-caret_.75s_step-end_infinite]">Adolfo Pérez León</span>}
+            {heroState === 'glow' && <span>Adolfo Pérez León</span>}
           </h1>
-          <p className="text-xl md:text-2xl font-semibold text-blue-600 dark:text-blue-400 mb-10 max-w-2xl mx-auto">
-            {t.subtitle}
+          <p className="text-xl md:text-2xl font-semibold text-blue-600 dark:text-blue-400 mb-10 max-w-2xl mx-auto flex justify-center">
+            {heroState === 'typewriter' ? <span className="inline-block typewriter-delayed pr-1">{t.subtitle}</span> : t.subtitle}
           </p>
 
           {/* Botones de redes y contacto principal (Cristal Esmerilado) */}
@@ -397,10 +440,11 @@ function App() {
               href="https://wa.me/525631896280"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center justify-center font-bold px-5 py-3 rounded-full text-slate-700 dark:text-slate-200 transition-all duration-300 hover:-translate-y-1 backdrop-blur-lg bg-white/60 dark:bg-slate-900/40 border border-white/80 dark:border-slate-700/50 shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:text-green-600 dark:hover:text-green-400 hover:border-green-300"
+              className="group inline-flex items-center justify-center font-bold px-5 py-3 rounded-full text-slate-700 dark:text-slate-200 transition-all duration-300 hover:-translate-y-1 backdrop-blur-lg bg-white/60 dark:bg-slate-900/40 border border-white/80 dark:border-slate-700/50 shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:text-green-600 dark:hover:text-green-400 hover:border-green-300"
             >
-              <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+              <svg className="w-5 h-5 mr-2 whatsapp-icon" viewBox="0 0 24 24">
+                <path className="whatsapp-stroke" fill="none" stroke="currentColor" strokeWidth="1" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                <path className="whatsapp-fill" fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
               </svg>
               WhatsApp
             </a>
@@ -410,10 +454,11 @@ function App() {
               href="https://www.linkedin.com/in/adolfo-león-3528a939a"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center justify-center font-bold px-5 py-3 rounded-full text-slate-700 dark:text-slate-200 transition-all duration-300 hover:-translate-y-1 backdrop-blur-lg bg-white/60 dark:bg-slate-900/40 border border-white/80 dark:border-slate-700/50 shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:text-blue-600 dark:hover:text-blue-400 hover:border-blue-300"
+              className="group inline-flex items-center justify-center font-bold px-5 py-3 rounded-full text-slate-700 dark:text-slate-200 transition-all duration-300 hover:-translate-y-1 backdrop-blur-lg bg-white/60 dark:bg-slate-900/40 border border-white/80 dark:border-slate-700/50 shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:text-blue-600 dark:hover:text-blue-400 hover:border-blue-300"
             >
-              <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+              <svg className="w-5 h-5 mr-2 linkedin-icon overflow-visible" viewBox="0 0 24 24">
+                <path className="linkedin-bg" fill="currentColor" d="M22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                <path className="linkedin-letters" fill="#ffffff" d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452z" />
               </svg>
               LinkedIn
             </a>
@@ -423,24 +468,69 @@ function App() {
               href="https://github.com/Adolfo-McFly"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center justify-center font-bold px-5 py-3 rounded-full text-slate-700 dark:text-slate-200 transition-all duration-300 hover:-translate-y-1 backdrop-blur-lg bg-white/60 dark:bg-slate-900/40 border border-white/80 dark:border-slate-700/50 shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:text-slate-900 dark:hover:text-white hover:border-slate-400"
+              className="group inline-flex items-center justify-center font-bold px-5 py-3 rounded-full text-slate-700 dark:text-slate-200 transition-all duration-300 hover:-translate-y-1 backdrop-blur-lg bg-white/60 dark:bg-slate-900/40 border border-white/80 dark:border-slate-700/50 shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:text-slate-900 dark:hover:text-white hover:border-slate-400"
             >
-              <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
+              <svg className="w-5 h-5 mr-2 overflow-visible" viewBox="0 0 24 24">
+                <path className="github-stroke" fill="none" stroke="currentColor" strokeWidth="1" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+                <path className="github-fill" fill="currentColor" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
               </svg>
               GitHub
             </a>
 
             {/* Email */}
-            <a
+            <motion.a
               href="mailto:adolfopl55@gmail.com"
-              className="inline-flex items-center justify-center font-bold px-5 py-3 rounded-full text-slate-700 dark:text-slate-200 transition-all duration-300 hover:-translate-y-1 backdrop-blur-lg bg-white/60 dark:bg-slate-900/40 border border-white/80 dark:border-slate-700/50 shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:text-blue-600 dark:hover:text-blue-400 hover:border-blue-300"
+              className="group inline-flex items-center justify-center font-bold px-5 py-3 rounded-full text-slate-700 dark:text-slate-200 transition-all duration-300 hover:-translate-y-1 backdrop-blur-lg bg-white/60 dark:bg-slate-900/40 border border-white/80 dark:border-slate-700/50 shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:text-blue-600 dark:hover:text-blue-400 hover:border-blue-300"
+              initial="rest"
+              whileHover="hover"
             >
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              <svg className="w-5 h-5 mr-2 overflow-visible" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                
+                {/* Envelope Body (Morphs to plane later) */}
+                <motion.path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  variants={{
+                    rest: { d: "M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7", x: 0, y: 0, scale: 1, opacity: 1 },
+                    hover: { 
+                      d: "M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z", // Paper plane path
+                      x: 15, y: -15, scale: 0.5, opacity: 0,
+                      transition: { duration: 1, ease: "easeOut", delay: 1.2 } 
+                    }
+                  }}
+                />
+                
+                {/* Paper sliding IN */}
+                <motion.path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  variants={{
+                    rest: { d: "M5 3h14v10H5z", y: -10, opacity: 1 }, // starts outside
+                    hover: { 
+                      d: "M5 3h14v10H5z", y: 0, opacity: 0, // slides in, then hides when plane takes off
+                      transition: { duration: 0.5, ease: "easeIn", opacity: { delay: 1.2, duration: 0.1 } } 
+                    }
+                  }}
+                />
+                
+                {/* Flap (Open by default, closes on hover) */}
+                <motion.path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  d="M3 7l9 6 9-6"
+                  style={{ transformOrigin: "50% 30%" }}
+                  variants={{
+                    rest: { rotateX: 180, opacity: 1 }, // open
+                    hover: { 
+                      rotateX: 0, // closes
+                      opacity: 0, // hides when plane takes off
+                      transition: { duration: 0.4, delay: 0.6, opacity: { delay: 1.2, duration: 0.1 } } 
+                    }
+                  }}
+                />
               </svg>
               Email
-            </a>
+            </motion.a>
           </div>
 
           {/* Sub-sección 'Documentación' */}
@@ -450,31 +540,46 @@ function App() {
             </h3>
             <div className="flex flex-wrap justify-center items-center gap-4">
               {/* Ver CV */}
-              <a
+              <motion.a
                 href="/CV.pdf"
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center justify-center font-bold px-6 py-2.5 rounded-full text-white transition-all duration-300 hover:-translate-y-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 shadow-md hover:shadow-indigo-500/20 cursor-pointer"
+                initial="rest"
+                whileHover="hover"
               >
                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  <motion.g variants={{ hover: { scaleY: 0.1, transition: { repeat: 3, repeatType: 'reverse', duration: 0.15 } } }} style={{ transformOrigin: "center" }}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </motion.g>
                 </svg>
                 {t.btnDownloadCV}
-              </a>
+              </motion.a>
 
               {/* Referencias */}
-              <a
+              <motion.a
                 href="/Referencias.pdf"
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center justify-center font-bold px-6 py-2.5 rounded-full text-slate-700 dark:text-slate-200 transition-all duration-300 hover:-translate-y-0.5 backdrop-blur-lg bg-white/50 dark:bg-slate-900/50 border border-white/60 dark:border-slate-700/60 hover:bg-white/80 dark:hover:bg-slate-800/80 shadow-sm hover:shadow-md cursor-pointer"
+                initial="rest"
+                whileHover="hover"
               >
-                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  {/* Back Document */}
+                  <motion.path 
+                    strokeLinecap="round" strokeLinejoin="round" d="M7 7h10v10H7z"
+                    variants={{ rest: { x: 0, y: 0 }, hover: { x: 3, y: 3, transition: { type: "spring", stiffness: 300, damping: 20 } } }}
+                  />
+                  {/* Front Document */}
+                  <motion.path 
+                    strokeLinecap="round" strokeLinejoin="round" d="M4 4h10v10H4z" fill="var(--tw-bg-opacity, white)" className="fill-white dark:fill-slate-900"
+                    variants={{ rest: { x: 0, y: 0 }, hover: { x: -3, y: -3, transition: { type: "spring", stiffness: 300, damping: 20 } } }}
+                  />
                 </svg>
                 {t.btnDownloadLetter}
-              </a>
+              </motion.a>
             </div>
           </div>
         </div>
@@ -483,8 +588,8 @@ function App() {
       {/* Main Grid Content */}
       <main className="max-w-6xl mx-auto relative z-20 px-4 mt-8">
 
-        {/* Sección: MI ESPECIALIDAD (3 Columnas con cursor glow) */}
-        <section className="mb-24">
+        {/* Sección: MI ESPECIALIDAD */}
+        <section className="mb-24 mt-12">
           <div className="flex items-center justify-center mb-12">
             <h2 className="text-2xl md:text-3xl font-extrabold text-slate-800 dark:text-white bg-white/50 dark:bg-slate-900/50 px-8 py-3 rounded-full shadow-[0_8px_32px_rgba(31,38,135,0.05),inset_0_1px_1px_rgba(255,255,255,0.7)] border border-white/60 dark:border-slate-800/60 backdrop-blur-md">
               {t.specialtyTitle}
@@ -496,7 +601,8 @@ function App() {
               <div
                 key={idx}
                 onMouseMove={handleMouseMoveGlow}
-                className="relative bg-white/40 dark:bg-slate-900/40 rounded-3xl p-8 shadow-[0_15px_35px_rgba(0,0,0,0.03),inset_0_1px_1px_rgba(255,255,255,0.8)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] border border-white/50 dark:border-slate-700/50 hover:-translate-y-2 hover:shadow-[0_20px_45px_rgba(0,0,0,0.07)] transition-all duration-500 group flex flex-col justify-between cursor-default"
+                className="slide-in-right relative bg-white dark:bg-slate-900 rounded-3xl p-8 shadow-[0_15px_35px_rgba(0,0,0,0.03),inset_0_1px_1px_rgba(255,255,255,0.8)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] border border-white/50 dark:border-slate-700/50 hover:-translate-y-2 hover:shadow-[0_20px_45px_rgba(0,0,0,0.07)] transition-all duration-500 group flex flex-col justify-between cursor-default"
+                style={{ transitionDelay: `${idx * 150}ms` }}
               >
                 <div
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-3xl"
@@ -540,402 +646,218 @@ function App() {
         </section>
 
         {/* Nueva Estructura del CV */}
-        <section className="mb-24 max-w-4xl mx-auto">
-          <div className="space-y-6">
+        <div className="mb-24 max-w-4xl mx-auto space-y-12">
 
-            {/* Sobre Mí */}
-            <div
-              onMouseMove={handleMouseMoveGlow}
-              className="relative rounded-3xl p-8 backdrop-blur-xl bg-white/40 dark:bg-slate-900/40 border border-white/60 dark:border-slate-700/50 shadow-[0_8px_32px_rgba(31,38,135,0.04),inset_0_1px_1px_rgba(255,255,255,0.6)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] transition-all duration-300 group cursor-default"
-            >
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-3xl" style={{ background: `radial-gradient(350px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(59, 130, 246, 0.1), transparent 80%)` }} />
-              <div className="relative z-10">
-                <h3 className="text-2xl font-extrabold text-slate-800 dark:text-white mb-3">
-                  {t.aboutMeTitle}
-                </h3>
-                <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
-                  {t.aboutMeText}
-                </p>
+          {/* Sobre Mí */}
+          <AboutMe 
+            title={t.aboutMeTitle} 
+            text={t.aboutMeText} 
+            handleMouseMoveGlow={handleMouseMoveGlow} 
+          />
+
+          {/* Habilidades */}
+          <section id="skills">
+            <TechnicalSkills categories={skillsCategories} title={t.skillsTitle} />
+          </section>
+
+          {/* Experiencia Laboral */}
+          <section id="experience"
+            onMouseMove={handleMouseMoveGlow}
+            className="relative rounded-3xl p-8 backdrop-blur-xl bg-white/40 dark:bg-slate-900/40 border border-white/60 dark:border-slate-700/50 shadow-[0_8px_32px_rgba(31,38,135,0.04),inset_0_1px_1px_rgba(255,255,255,0.6)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] transition-all duration-300 group cursor-default"
+          >
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-3xl" style={{ background: `radial-gradient(350px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(59, 130, 246, 0.1), transparent 80%)` }} />
+            <div className="relative z-10">
+              <h3 className="text-2xl font-extrabold text-slate-800 dark:text-white mb-6 border-b border-white/30 dark:border-slate-700/30 pb-2">
+                {t.experienceTitle}
+              </h3>
+              <div className="space-y-6">
+                {t.expList.map((exp, idx) => (
+                  <div key={idx} className="relative pl-4 border-l-2 border-blue-500/50 dark:border-blue-400/50">
+                    <h4 className="text-lg font-bold text-slate-800 dark:text-white leading-snug">
+                      {exp.title}
+                    </h4>
+                    <p className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-4">
+                      {exp.company}
+                    </p>
+                    <ul className="list-disc pl-5 space-y-2 text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
+                      {exp.bullets.map((bullet, bulletIdx) => (
+                        <li key={bulletIdx}>{bullet}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
               </div>
             </div>
+          </section>
 
-            {/* Habilidades */}
-            <div
-              onMouseMove={handleMouseMoveGlow}
-              className="relative rounded-3xl p-8 backdrop-blur-xl bg-white/40 dark:bg-slate-900/40 border border-white/60 dark:border-slate-700/50 shadow-[0_8px_32px_rgba(31,38,135,0.04),inset_0_1px_1px_rgba(255,255,255,0.6)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] transition-all duration-300 group cursor-default"
-            >
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-3xl" style={{ background: `radial-gradient(350px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(59, 130, 246, 0.1), transparent 80%)` }} />
-              <div className="relative z-10">
-                <h3 className="text-2xl font-extrabold text-slate-800 dark:text-white mb-5">
-                  {t.skillsTitle}
-                </h3>
 
-                <div className="space-y-4">
-                  {skillsCategories.map((cat, categoryIdx) => (
-                    <div key={categoryIdx}>
-                      <h5 className="text-sm font-bold text-slate-400 mb-2 uppercase tracking-wider">{cat.name}</h5>
-                      <div className="flex flex-wrap gap-2.5">
-                        {cat.items.map((skill) => (
-                          <span
-                            key={skill}
-                            className="px-4 py-2 rounded-full text-sm font-bold text-slate-700 dark:text-slate-200 backdrop-blur-md bg-white/50 dark:bg-slate-800/50 border border-white/60 dark:border-slate-700/60 shadow-sm"
-                          >
-                            {skill}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
 
-            {/* Experiencia Laboral */}
-            <div
-              onMouseMove={handleMouseMoveGlow}
-              className="relative rounded-3xl p-8 backdrop-blur-xl bg-white/40 dark:bg-slate-900/40 border border-white/60 dark:border-slate-700/50 shadow-[0_8px_32px_rgba(31,38,135,0.04),inset_0_1px_1px_rgba(255,255,255,0.6)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] transition-all duration-300 group cursor-default"
-            >
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-3xl" style={{ background: `radial-gradient(350px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(59, 130, 246, 0.1), transparent 80%)` }} />
-              <div className="relative z-10">
-                <h3 className="text-2xl font-extrabold text-slate-800 dark:text-white mb-6 border-b border-white/30 dark:border-slate-700/30 pb-2">
-                  {t.experienceTitle}
-                </h3>
-                <div className="space-y-6">
-                  {t.expList.map((exp, idx) => (
-                    <div key={idx} className="relative pl-4 border-l-2 border-blue-500/50 dark:border-blue-400/50">
-                      <h4 className="text-lg font-bold text-slate-800 dark:text-white leading-snug">
-                        {exp.title}
-                      </h4>
-                      <p className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-4">
-                        {exp.company}
-                      </p>
-                      <ul className="list-disc pl-5 space-y-2 text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
-                        {exp.bullets.map((bullet, bulletIdx) => (
-                          <li key={bulletIdx}>{bullet}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+        </div>
 
-            {/* Educación */}
-            <div
-              onMouseMove={handleMouseMoveGlow}
-              className="relative rounded-3xl p-8 backdrop-blur-xl bg-white/40 dark:bg-slate-900/40 border border-white/60 dark:border-slate-700/50 shadow-[0_8px_32px_rgba(31,38,135,0.04),inset_0_1px_1px_rgba(255,255,255,0.6)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] transition-all duration-300 group cursor-default"
-            >
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-3xl" style={{ background: `radial-gradient(350px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(59, 130, 246, 0.1), transparent 80%)` }} />
-              <div className="relative z-10">
-                <h3 className="text-2xl font-extrabold text-slate-800 dark:text-white mb-3">
-                  {t.educationTitle}
-                </h3>
-                <p className="text-slate-600 dark:text-slate-300 leading-relaxed font-semibold">
-                  {t.educationText}
-                </p>
-              </div>
-            </div>
 
-            {/* Idiomas */}
-            <div
-              onMouseMove={handleMouseMoveGlow}
-              className="relative rounded-3xl p-8 backdrop-blur-xl bg-white/40 dark:bg-slate-900/40 border border-white/60 dark:border-slate-700/50 shadow-[0_8px_32px_rgba(31,38,135,0.04),inset_0_1px_1px_rgba(255,255,255,0.6)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] transition-all duration-300 group cursor-default"
-            >
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-3xl" style={{ background: `radial-gradient(350px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(59, 130, 246, 0.1), transparent 80%)` }} />
-              <div className="relative z-10">
-                <h3 className="text-2xl font-extrabold text-slate-800 dark:text-white mb-3">
-                  {t.languagesTitle}
-                </h3>
-                <p className="text-slate-600 dark:text-slate-300 leading-relaxed font-semibold">
-                  {t.languagesText}
-                </p>
-              </div>
-            </div>
 
-          </div>
-        </section>
-
-        {/* Sección: PROYECTOS PRINCIPALES */}
-        <section className="mb-24">
-          <div className="flex items-center justify-center mb-12">
-            <h2 className="text-2xl md:text-3xl font-extrabold text-slate-800 dark:text-white bg-white/50 dark:bg-slate-900/50 px-8 py-3 rounded-full shadow-[0_8px_32px_rgba(31,38,135,0.05),inset_0_1px_1px_rgba(255,255,255,0.7)] border border-white/60 dark:border-slate-800/60 backdrop-blur-md">
+        {/* Sección: PROYECTOS PRINCIPALES Y OTROS */}
+        <section id="projects" className="mb-24">
+          <div className="flex items-center justify-center mb-10">
+            <h2 className="text-xl md:text-2xl font-extrabold text-slate-800 dark:text-white bg-white/50 dark:bg-slate-900/50 px-8 py-2.5 rounded-full shadow-[0_8px_32px_rgba(31,38,135,0.05),inset_0_1px_1px_rgba(255,255,255,0.7)] border border-white/60 dark:border-slate-800/60 backdrop-blur-md">
               {t.mainProjectsTitle}
             </h2>
           </div>
 
-          {/* Proyecto 1: NedimiPOS Cloud */}
-          <div
-            onMouseMove={handleMouseMoveGlow}
-            className="relative rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.04),inset_0_1px_1px_rgba(255,255,255,0.8)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] hover:shadow-[0_25px_60px_rgba(0,0,0,0.08)] overflow-hidden flex flex-col lg:flex-row mb-12 transition-all duration-500 hover:-translate-y-1.5 backdrop-blur-xl bg-white/40 dark:bg-slate-900/40 border border-white/50 dark:border-slate-700/50 group cursor-default"
-          >
-            <div
-              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-[2.5rem]"
-              style={{
-                background: `radial-gradient(500px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(59, 130, 246, 0.15), transparent 80%)`
-              }}
+          <div className="flex flex-col gap-8 mb-16">
+            <ProjectCard 
+              title={t.projects.nedimiPosCloud.title}
+              description={t.projects.nedimiPosCloud.description}
+              tags={t.projects.nedimiPosCloud.tags.concat(['PHP', 'JavaScript', 'SQL'])}
+              delay={0.1}
+              imageSrc="/imagenes/nedimipos.png"
+              link="https://nedimipos.com"
+              linkText={t.visitWeb}
+              onImageClick={() => setImagenAmpliacion('/imagenes/nedimipos.png')}
             />
-
-            <div
-              className="lg:w-3/5 overflow-hidden bg-slate-50/20 dark:bg-slate-950/20 flex items-center justify-center p-6 lg:p-8 cursor-pointer relative z-10"
-              onClick={() => setImagenAmpliacion('/imagenes/nedimipos.png')}
-            >
-              <img
-                src="/imagenes/nedimipos.png"
-                alt="NedimiPOS System"
-                className="w-full h-auto rounded-2xl shadow-[0_15px_30px_rgba(0,0,0,0.06)] transition-transform duration-700 group-hover:scale-[1.02]"
-                title={lang === 'ES' ? 'Clic para ampliar' : 'Click to enlarge'}
-                draggable={false}
-                data-visualsearch="false"
-              />
-            </div>
-
-            <div className="p-8 md:p-12 lg:w-2/5 flex flex-col justify-center relative z-10">
-              <div className="flex flex-wrap items-center gap-2 mb-4">
-                {t.projects.nedimiPosCloud.tags.map((tag, idx) => (
-                  <span key={idx} className="bg-blue-500/10 dark:bg-blue-400/10 text-blue-700 dark:text-blue-300 text-xs font-extrabold px-3.5 py-1 rounded-full border border-blue-500/20 backdrop-blur-sm">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-              <h3 className="text-3xl font-extrabold mb-4 text-slate-800 dark:text-white tracking-tight leading-tight">
-                {t.projects.nedimiPosCloud.title}
-              </h3>
-              <p className="text-slate-600 dark:text-slate-300 mb-6 leading-relaxed text-base">
-                {t.projects.nedimiPosCloud.description}
-              </p>
-              <p className="text-sm font-bold text-slate-500 dark:text-slate-400 mb-8 flex items-center gap-1.5">
-                <span className="text-blue-600 dark:text-blue-400">{t.techLabel}</span> PHP, JavaScript, SQL
-              </p>
-              <div className="flex">
-                <a
-                  href="https://nedimipos.com/puntodeventa/"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center justify-center bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-extrabold px-8 py-3.5 rounded-full hover:from-blue-500 hover:to-indigo-500 transition-all duration-300 shadow-lg hover:shadow-indigo-500/20 hover:scale-[1.03]"
-                >
-                  {t.viewProject}
-                </a>
-              </div>
-            </div>
+            <ProjectCard 
+              title={t.projects.nedimiPosLanding.title}
+              description={t.projects.nedimiPosLanding.description}
+              tags={t.projects.nedimiPosLanding.tags.concat(['Stripe API'])}
+              delay={0.2}
+              imageSrc="/imagenes/nedimi-web.png"
+              link="https://nedimipos.com"
+              linkText={t.visitWeb}
+              onImageClick={() => setImagenAmpliacion('/imagenes/nedimi-web.png')}
+            />
           </div>
 
-          {/* Proyecto 2: NedimiPOS Landing & Payments */}
-          <div
-            onMouseMove={handleMouseMoveGlow}
-            className="relative rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.04),inset_0_1px_1px_rgba(255,255,255,0.8)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] hover:shadow-[0_25px_60px_rgba(0,0,0,0.08)] overflow-hidden flex flex-col lg:flex-row-reverse mb-12 transition-all duration-500 hover:-translate-y-1.5 backdrop-blur-xl bg-white/40 dark:bg-slate-900/40 border border-white/50 dark:border-slate-700/50 group cursor-default"
-          >
-            <div
-              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-[2.5rem]"
-              style={{
-                background: `radial-gradient(99px 102px 241px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(99, 102, 241, 0.15), transparent 80%)`
-              }}
-            />
-
-            <div
-              className="lg:w-3/5 overflow-hidden bg-slate-50/20 dark:bg-slate-950/20 flex items-center justify-center p-6 lg:p-8 cursor-pointer relative z-10"
-              onClick={() => setImagenAmpliacion('/imagenes/nedimi-web.png')}
-            >
-              <img
-                src="/imagenes/nedimi-web.png"
-                alt="NedimiPOS Landing"
-                className="w-full h-auto rounded-2xl shadow-[0_15px_30px_rgba(0,0,0,0.06)] transition-transform duration-700 group-hover:scale-[1.02]"
-                title={lang === 'ES' ? 'Clic para ampliar' : 'Click to enlarge'}
-                draggable={false}
-                data-visualsearch="false"
-              />
-            </div>
-
-            <div className="p-8 md:p-12 lg:w-2/5 flex flex-col justify-center relative z-10">
-              <div className="flex flex-wrap items-center gap-2 mb-4">
-                {t.projects.nedimiPosLanding.tags.map((tag, idx) => (
-                  <span key={idx} className="bg-indigo-500/10 dark:bg-indigo-400/10 text-indigo-700 dark:text-indigo-300 text-xs font-extrabold px-3.5 py-1 rounded-full border border-indigo-500/20 backdrop-blur-sm">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-              <h3 className="text-3xl font-extrabold mb-4 text-slate-800 dark:text-white tracking-tight leading-tight">
-                {t.projects.nedimiPosLanding.title}
-              </h3>
-              <p className="text-slate-600 dark:text-slate-300 mb-6 leading-relaxed text-base">
-                {t.projects.nedimiPosLanding.description}
-              </p>
-              <p className="text-sm font-bold text-slate-500 dark:text-slate-400 mb-8 flex items-center gap-1.5">
-                <span className="text-blue-600 dark:text-blue-400">{t.techLabel}</span> Stripe API, PHP, SQL, Frontend
-              </p>
-              <div className="flex">
-                <a
-                  href="https://nedimipos.com/"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center justify-center bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-extrabold px-8 py-3.5 rounded-full hover:from-blue-500 hover:to-indigo-500 transition-all duration-300 shadow-lg hover:shadow-indigo-500/20 hover:scale-[1.03]"
-                >
-                  {t.visitWeb}
-                </a>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Sección: OTROS SITIOS WEB - Grid 2 columnas */}
-        <section className="mb-16">
           <div className="flex items-center justify-center mb-10">
             <h2 className="text-xl md:text-2xl font-extrabold text-slate-800 dark:text-white bg-white/50 dark:bg-slate-900/50 px-8 py-2.5 rounded-full shadow-[0_8px_32px_rgba(31,38,135,0.05),inset_0_1px_1px_rgba(255,255,255,0.7)] border border-white/60 dark:border-slate-800/60 backdrop-blur-md">
               {t.otherWebsitesTitle}
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-
-            {/* Tarjeta 1: The Money Bridge */}
-            <div
-              onMouseMove={handleMouseMoveGlow}
-              className="relative bg-white/40 dark:bg-slate-900/40 rounded-3xl p-8 shadow-[0_15px_35px_rgba(0,0,0,0.03),inset_0_1px_1px_rgba(255,255,255,0.8)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] border border-white/50 dark:border-slate-700/50 hover:-translate-y-2 hover:shadow-[0_20px_45px_rgba(0,0,0,0.07)] transition-all duration-500 group flex flex-col justify-between cursor-default"
-            >
-              <div
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-3xl"
-                style={{
-                  background: `radial-gradient(350px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(59, 130, 246, 0.12), transparent 80%)`
-                }}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <TiltWrapper>
+              <ProjectCard 
+                title={t.projects.moneyBridge.title}
+                description={t.projects.moneyBridge.description}
+                tags={['React', 'UI/UX Design', 'Tailwind CSS']}
+                delay={0.1}
+                link="#"
+                linkText={t.visitWeb}
               />
+            </TiltWrapper>
+            <TiltWrapper>
+              <ProjectCard 
+                title={t.projects.esoftpasion.title}
+                description={t.projects.esoftpasion.description}
+                tags={['React', 'UI/UX Design', 'Tailwind CSS']}
+                delay={0.2}
+                link="#"
+                linkText={t.visitWeb}
+              />
+            </TiltWrapper>
+            <TiltWrapper>
+              <ProjectCard 
+                title={t.projects.nedimi.title}
+                description={t.projects.nedimi.description}
+                tags={['React', 'UI/UX Design', 'Tailwind CSS']}
+                delay={0.1}
+                link="#"
+                linkText={t.visitWeb}
+              />
+            </TiltWrapper>
+            <TiltWrapper>
+              <ProjectCard 
+                title={t.projects.dolphinNedimi.title}
+                description={t.projects.dolphinNedimi.description}
+                tags={['React', 'UI/UX Design', 'Tailwind CSS']}
+                delay={0.2}
+                link="#"
+                linkText={t.visitWeb}
+              />
+            </TiltWrapper>
+          </div>
+        </section>
 
-              <div className="relative z-10">
-                <h4 className="text-2xl font-extrabold text-slate-800 dark:text-white mb-3 tracking-tight">
-                  {t.projects.moneyBridge.title}
-                </h4>
-                <p className="text-slate-600 dark:text-slate-300 mb-6 text-sm leading-relaxed">
-                  {t.projects.moneyBridge.description}
-                </p>
+        {/* --- SECCIÓN ESTADÍSTICAS REUBICADA --- */}
+        <section id="stats" className="mb-24">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            {/* Tarjeta 1 */}
+            <div className="animate-float-rotate relative group cursor-default p-8 rounded-[2rem] bg-white dark:bg-[#020617] border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col items-center justify-center overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-blue-500/50">
+              <div className="absolute inset-0 bg-gradient-to-b from-blue-50 dark:from-[#0f172a] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              
+              <div className="relative mb-6 w-[88px] h-[88px] rounded-full border border-dashed border-slate-300 dark:border-slate-700 flex items-center justify-center">
+                <div className="absolute inset-2 border border-dotted border-slate-200 dark:border-slate-600 rounded-full animate-[spin_10s_linear_infinite]"></div>
+                {/* 3D Browser SVG */}
+                <svg className="w-10 h-10 text-[#38bdf8] relative z-10 drop-shadow-[0_5px_10px_rgba(56,189,248,0.5)]" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="2" y="4" width="20" height="16" rx="2" fill="url(#paint0_linear)" stroke="currentColor" strokeWidth="2"/>
+                  <path d="M6 8H7M9 8H10M12 8H13" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+                  <path d="M2 12H22" stroke="currentColor" strokeWidth="2"/>
+                  <defs>
+                    <linearGradient id="paint0_linear" x1="12" y1="4" x2="12" y2="20" gradientUnits="userSpaceOnUse">
+                      <stop stopColor="#38bdf8" stopOpacity="0.2"/>
+                      <stop offset="1" stopColor="#0284c7" stopOpacity="0.8"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
               </div>
-              <div className="relative z-10 mt-auto">
-                <p className="text-xs font-extrabold text-indigo-600 dark:text-indigo-400 tracking-wide uppercase mb-4">
-                  React • UI/UX Design • Tailwind CSS
-                </p>
-                <a
-                  href="https://www.themoneybridge.com.mx/"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-indigo-600 dark:hover:text-indigo-400 font-extrabold text-sm relative group/link cursor-pointer"
-                >
-                  {t.visitWeb}
-                  <svg className="w-4 h-4 ml-1 transition-transform group-hover/link:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                  </svg>
-                </a>
-              </div>
+              
+              <h3 className="text-[3.5rem] leading-none font-black text-[#38bdf8] mb-3 drop-shadow-[0_0_20px_rgba(56,189,248,0.6)] tracking-tighter">7</h3>
+              <p className="text-[10px] tracking-[0.2em] font-bold text-slate-500 dark:text-slate-300 uppercase">Páginas web concluidas</p>
             </div>
 
-            {/* Tarjeta 2: EsoftPasion */}
-            <div
-              onMouseMove={handleMouseMoveGlow}
-              className="relative bg-white/40 dark:bg-slate-900/40 rounded-3xl p-8 shadow-[0_15px_35px_rgba(0,0,0,0.03),inset_0_1px_1px_rgba(255,255,255,0.8)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] border border-white/50 dark:border-slate-700/50 hover:-translate-y-2 hover:shadow-[0_20px_45px_rgba(0,0,0,0.07)] transition-all duration-500 group flex flex-col justify-between cursor-default"
-            >
-              <div
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-3xl"
-                style={{
-                  background: `radial-gradient(350px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(59, 130, 246, 0.12), transparent 80%)`
-                }}
-              />
-
-              <div className="relative z-10">
-                <h4 className="text-2xl font-extrabold text-slate-800 dark:text-white mb-3 tracking-tight">
-                  {t.projects.esoftpasion.title}
-                </h4>
-                <p className="text-slate-600 dark:text-slate-300 mb-6 text-sm leading-relaxed">
-                  {t.projects.esoftpasion.description}
-                </p>
+            {/* Tarjeta 2 */}
+            <div className="animate-float-rotate relative group cursor-default p-8 rounded-[2rem] bg-white dark:bg-[#020617] border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col items-center justify-center overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-emerald-500/50" style={{ animationDelay: '2s' }}>
+              <div className="absolute inset-0 bg-gradient-to-b from-emerald-50 dark:from-[#064e3b]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              
+              <div className="relative mb-6 w-[88px] h-[88px] rounded-full border border-dashed border-slate-300 dark:border-slate-700 flex items-center justify-center">
+                <div className="absolute inset-2 border border-dotted border-slate-200 dark:border-slate-600 rounded-full animate-[spin_10s_linear_infinite]"></div>
+                {/* 3D Cube SVG */}
+                <svg className="w-10 h-10 text-[#10b981] relative z-10 drop-shadow-[0_5px_10px_rgba(16,185,129,0.5)]" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="url(#paint1_linear)" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/>
+                  <path d="M2 7V17L12 22V12L2 7Z" fill="url(#paint2_linear)" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/>
+                  <path d="M22 7V17L12 22V12L22 7Z" fill="url(#paint3_linear)" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/>
+                  <defs>
+                    <linearGradient id="paint1_linear" x1="12" y1="2" x2="12" y2="12" gradientUnits="userSpaceOnUse">
+                      <stop stopColor="#34d399" stopOpacity="0.8"/>
+                      <stop offset="1" stopColor="#059669" stopOpacity="0.4"/>
+                    </linearGradient>
+                    <linearGradient id="paint2_linear" x1="7" y1="7" x2="7" y2="22" gradientUnits="userSpaceOnUse">
+                      <stop stopColor="#10b981" stopOpacity="0.6"/>
+                      <stop offset="1" stopColor="#047857" stopOpacity="0.9"/>
+                    </linearGradient>
+                    <linearGradient id="paint3_linear" x1="17" y1="7" x2="17" y2="22" gradientUnits="userSpaceOnUse">
+                      <stop stopColor="#059669" stopOpacity="0.8"/>
+                      <stop offset="1" stopColor="#064e3b" stopOpacity="1"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
               </div>
-              <div className="relative z-10 mt-auto">
-                <p className="text-xs font-extrabold text-indigo-600 dark:text-indigo-400 tracking-wide uppercase mb-4">
-                  React • UI/UX Design • Tailwind CSS
-                </p>
-                <a
-                  href="https://esoftpasion.com/"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-indigo-600 dark:hover:text-indigo-400 font-extrabold text-sm relative group/link cursor-pointer"
-                >
-                  {t.visitWeb}
-                  <svg className="w-4 h-4 ml-1 transition-transform group-hover/link:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                  </svg>
-                </a>
-              </div>
+              
+              <h3 className="text-[3.5rem] leading-none font-black text-[#10b981] mb-3 drop-shadow-[0_0_20px_rgba(16,185,129,0.6)] tracking-tighter">1</h3>
+              <p className="text-[10px] tracking-[0.2em] font-bold text-slate-500 dark:text-slate-300 uppercase">Proyectos generales</p>
             </div>
 
-            {/* Tarjeta 3: Nedimi */}
-            <div
-              onMouseMove={handleMouseMoveGlow}
-              className="relative bg-white/40 dark:bg-slate-900/40 rounded-3xl p-8 shadow-[0_15px_35px_rgba(0,0,0,0.03),inset_0_1px_1px_rgba(255,255,255,0.8)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] border border-white/50 dark:border-slate-700/50 hover:-translate-y-2 hover:shadow-[0_20px_45px_rgba(0,0,0,0.07)] transition-all duration-500 group flex flex-col justify-between cursor-default"
-            >
-              <div
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-3xl"
-                style={{
-                  background: `radial-gradient(350px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(59, 130, 246, 0.12), transparent 80%)`
-                }}
-              />
-
-              <div className="relative z-10">
-                <h4 className="text-2xl font-extrabold text-slate-800 dark:text-white mb-3 tracking-tight">
-                  {t.projects.nedimi.title}
-                </h4>
-                <p className="text-slate-600 dark:text-slate-300 mb-6 text-sm leading-relaxed">
-                  {t.projects.nedimi.description}
-                </p>
+            {/* Tarjeta 3 */}
+            <div className="animate-float-rotate relative group cursor-default p-8 rounded-[2rem] bg-white dark:bg-[#020617] border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col items-center justify-center overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-purple-500/50" style={{ animationDelay: '4s' }}>
+              <div className="absolute inset-0 bg-gradient-to-b from-purple-50 dark:from-[#4c1d95]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              
+              <div className="relative mb-6 w-[88px] h-[88px] rounded-full border border-dashed border-slate-300 dark:border-slate-700 flex items-center justify-center">
+                <div className="absolute inset-2 border border-dotted border-slate-200 dark:border-slate-600 rounded-full animate-[spin_10s_linear_infinite]"></div>
+                {/* 3D Shield SVG */}
+                <svg className="w-10 h-10 text-[#fb923c] relative z-10 drop-shadow-[0_5px_10px_rgba(251,146,60,0.5)]" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 22C12 22 20 18 20 12V5L12 2L4 5V12C4 18 12 22 12 22Z" fill="url(#paint4_linear)" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/>
+                  <path d="M12 8V12L15 15" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <defs>
+                    <linearGradient id="paint4_linear" x1="12" y1="2" x2="12" y2="22" gradientUnits="userSpaceOnUse">
+                      <stop stopColor="#fb923c" stopOpacity="0.4"/>
+                      <stop offset="1" stopColor="#c084fc" stopOpacity="0.9"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
               </div>
-              <div className="relative z-10 mt-auto">
-                <p className="text-xs font-extrabold text-indigo-600 dark:text-indigo-400 tracking-wide uppercase mb-4">
-                  React • UI/UX Design • Tailwind CSS
-                </p>
-                <a
-                  href="https://nedimi.com/"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-indigo-600 dark:hover:text-indigo-400 font-extrabold text-sm relative group/link cursor-pointer"
-                >
-                  {t.visitWeb}
-                  <svg className="w-4 h-4 ml-1 transition-transform group-hover/link:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                  </svg>
-                </a>
-              </div>
-            </div>
-
-            {/* Tarjeta 4: Dolphin Nedimi */}
-            <div
-              onMouseMove={handleMouseMoveGlow}
-              className="relative bg-white/40 dark:bg-slate-900/40 rounded-3xl p-8 shadow-[0_15px_35px_rgba(0,0,0,0.03),inset_0_1px_1px_rgba(255,255,255,0.8)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] border border-white/50 dark:border-slate-700/50 hover:-translate-y-2 hover:shadow-[0_20px_45px_rgba(0,0,0,0.07)] transition-all duration-500 group flex flex-col justify-between cursor-default"
-            >
-              <div
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-3xl"
-                style={{
-                  background: `radial-gradient(350px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(59, 130, 246, 0.12), transparent 80%)`
-                }}
-              />
-
-              <div className="relative z-10">
-                <h4 className="text-2xl font-extrabold text-slate-800 dark:text-white mb-3 tracking-tight">
-                  {t.projects.dolphinNedimi.title}
-                </h4>
-                <p className="text-slate-600 dark:text-slate-300 mb-6 text-sm leading-relaxed">
-                  {t.projects.dolphinNedimi.description}
-                </p>
-              </div>
-              <div className="relative z-10 mt-auto">
-                <p className="text-xs font-extrabold text-indigo-600 dark:text-indigo-400 tracking-wide uppercase mb-4">
-                  React • UI/UX Design • Tailwind CSS
-                </p>
-                <a
-                  href="https://v2dolphin.nedimi.com/"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-indigo-600 dark:hover:text-indigo-400 font-extrabold text-sm relative group/link cursor-pointer"
-                >
-                  {t.visitWeb}
-                  <svg className="w-4 h-4 ml-1 transition-transform group-hover/link:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                  </svg>
-                </a>
-              </div>
+              
+              <h3 className="text-[3.5rem] leading-none font-black text-[#c084fc] mb-3 drop-shadow-[0_0_20px_rgba(192,132,252,0.6)] tracking-tighter">ACTIVO</h3>
+              <p className="text-[10px] tracking-[0.2em] font-bold text-slate-500 dark:text-slate-300 uppercase">Auditorías / Admin. Sistemas</p>
             </div>
 
           </div>
@@ -943,10 +865,85 @@ function App() {
       </main>
 
       {/* Footer */}
-      <footer className="text-center py-10 text-slate-400 dark:text-slate-500 text-sm relative z-20">
-        <p className="bg-white/30 dark:bg-slate-900/30 backdrop-blur-md px-6 py-2 rounded-full border border-white/40 dark:border-slate-800/40 inline-block shadow-sm">
+      <footer className="text-center py-10 text-slate-400 dark:text-slate-500 text-sm relative z-20 flex flex-col items-center">
+        <p className="bg-white/30 dark:bg-slate-900/30 backdrop-blur-md px-6 py-2 rounded-full border border-white/40 dark:border-slate-800/40 inline-block shadow-sm mb-8">
           {t.footerText}
         </p>
+
+        <motion.div 
+          className="flex justify-center items-center gap-4"
+          variants={{
+            hidden: {},
+            visible: { transition: { staggerChildren: 0.15 } }
+          }}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.8 }}
+        >
+          {/* WhatsApp */}
+          <motion.div variants={{ hidden: { y: -80, opacity: 0 }, visible: { y: 0, opacity: 1, transition: { type: "spring", bounce: 0.6, duration: 1 } } }}>
+            <a href="https://wa.me/525631896280" target="_blank" rel="noreferrer" className="group flex items-center justify-center p-4 rounded-full text-slate-700 dark:text-slate-200 transition-all duration-300 hover:-translate-y-1 backdrop-blur-lg bg-white/60 dark:bg-slate-900/40 border border-white/80 dark:border-slate-700/50 shadow-md hover:text-green-600 dark:hover:text-green-400 hover:border-green-300">
+              <svg className="w-6 h-6 whatsapp-icon" viewBox="0 0 24 24">
+                <path className="whatsapp-stroke" fill="none" stroke="currentColor" strokeWidth="1" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                <path className="whatsapp-fill" fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+              </svg>
+            </a>
+          </motion.div>
+
+          {/* LinkedIn */}
+          <motion.div variants={{ hidden: { y: -80, opacity: 0 }, visible: { y: 0, opacity: 1, transition: { type: "spring", bounce: 0.6, duration: 1 } } }}>
+            <a href="https://www.linkedin.com/in/adolfo-león-3528a939a" target="_blank" rel="noreferrer" className="group flex items-center justify-center p-4 rounded-full text-slate-700 dark:text-slate-200 transition-all duration-300 hover:-translate-y-1 backdrop-blur-lg bg-white/60 dark:bg-slate-900/40 border border-white/80 dark:border-slate-700/50 shadow-md hover:text-blue-600 dark:hover:text-blue-400 hover:border-blue-300">
+              <svg className="w-6 h-6 linkedin-icon overflow-visible" viewBox="0 0 24 24">
+                <path className="linkedin-bg" fill="currentColor" d="M22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                <path className="linkedin-letters" fill="#ffffff" d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452z" />
+              </svg>
+            </a>
+          </motion.div>
+
+          {/* GitHub */}
+          <motion.div variants={{ hidden: { y: -80, opacity: 0 }, visible: { y: 0, opacity: 1, transition: { type: "spring", bounce: 0.6, duration: 1 } } }}>
+            <a href="https://github.com/Adolfo-McFly" target="_blank" rel="noreferrer" className="group flex items-center justify-center p-4 rounded-full text-slate-700 dark:text-slate-200 transition-all duration-300 hover:-translate-y-1 backdrop-blur-lg bg-white/60 dark:bg-slate-900/40 border border-white/80 dark:border-slate-700/50 shadow-md hover:text-slate-900 dark:hover:text-white hover:border-slate-400">
+              <svg className="w-6 h-6 overflow-visible" viewBox="0 0 24 24">
+                <path className="github-stroke" fill="none" stroke="currentColor" strokeWidth="1" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+                <path className="github-fill" fill="currentColor" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+              </svg>
+            </a>
+          </motion.div>
+
+          {/* Email */}
+          <motion.div variants={{ hidden: { y: -80, opacity: 0 }, visible: { y: 0, opacity: 1, transition: { type: "spring", bounce: 0.6, duration: 1 } } }}>
+            <motion.a
+              href="mailto:adolfopl55@gmail.com"
+              className="group flex items-center justify-center p-4 rounded-full text-slate-700 dark:text-slate-200 transition-all duration-300 hover:-translate-y-1 backdrop-blur-lg bg-white/60 dark:bg-slate-900/40 border border-white/80 dark:border-slate-700/50 shadow-md hover:text-blue-600 dark:hover:text-blue-400 hover:border-blue-300"
+              initial="rest"
+              whileHover="hover"
+            >
+              <svg className="w-6 h-6 overflow-visible" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <motion.path 
+                  strokeLinecap="round" strokeLinejoin="round" 
+                  variants={{
+                    rest: { d: "M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7", x: 0, y: 0, scale: 1, opacity: 1 },
+                    hover: { d: "M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z", x: 15, y: -15, scale: 0.5, opacity: 0, transition: { duration: 1, ease: "easeOut", delay: 1.2 } }
+                  }}
+                />
+                <motion.path 
+                  strokeLinecap="round" strokeLinejoin="round" 
+                  variants={{
+                    rest: { d: "M5 3h14v10H5z", y: -10, opacity: 1 },
+                    hover: { d: "M5 3h14v10H5z", y: 0, opacity: 0, transition: { duration: 0.5, ease: "easeIn", opacity: { delay: 1.2, duration: 0.1 } } }
+                  }}
+                />
+                <motion.path 
+                  strokeLinecap="round" strokeLinejoin="round" d="M3 7l9 6 9-6" style={{ transformOrigin: "50% 30%" }}
+                  variants={{
+                    rest: { rotateX: 180, opacity: 1 },
+                    hover: { rotateX: 0, opacity: 0, transition: { duration: 0.4, delay: 0.6, opacity: { delay: 1.2, duration: 0.1 } } }
+                  }}
+                />
+              </svg>
+            </motion.a>
+          </motion.div>
+        </motion.div>
       </footer>
     </div>
   );
