@@ -18,6 +18,7 @@ const translations = {
     btnDownloadLetter: 'Referencias',
     mainProjectsTitle: 'Proyectos Principales',
     otherWebsitesTitle: 'Otros Sitios Web',
+    myRepositoriesTitle: 'Mis Repositorios',
     techLabel: 'Tecnologías:',
     viewProject: 'Ver Proyecto',
     visitWeb: 'Visitar Sitio Web',
@@ -90,6 +91,14 @@ const translations = {
       dolphinNedimi: {
         title: 'V2Dolphin',
         description: 'Sofisticada aplicación de control y monitoreo. Mi enfoque principal estuvo en el diseño visual de la interfaz de usuario, la maquetación detallada de paneles y el desarrollo frontend en React y Tailwind CSS, garantizando una excelente usabilidad en cualquier dispositivo.'
+      },
+      scanRecorte: {
+        title: 'scanRecorte',
+        description: 'Aplicación para escanear y recortar imágenes de forma rápida y precisa. Desarrollada para facilitar la digitalización y el procesamiento de documentos con herramientas eficientes.'
+      },
+      pdfast: {
+        title: 'PDFast',
+        description: 'Herramienta eficiente para procesar y manipular archivos PDF. Desarrollada para realizar operaciones rápidas sobre documentos, enfocada en el rendimiento y la facilidad de uso.'
       }
     }
   },
@@ -101,6 +110,7 @@ const translations = {
     btnDownloadLetter: 'References',
     mainProjectsTitle: 'Key Projects',
     otherWebsitesTitle: 'Other Websites',
+    myRepositoriesTitle: 'My Repositories',
     techLabel: 'Technologies:',
     viewProject: 'View Project',
     visitWeb: 'Visit Website',
@@ -173,6 +183,14 @@ const translations = {
       dolphinNedimi: {
         title: 'V2Dolphin',
         description: 'Sophisticated control and monitoring dashboard. My primary focus was on the visual design of the interface, highly detailed layouts for panels, and React & Tailwind frontend development to ensure seamless usability.'
+      },
+      scanRecorte: {
+        title: 'scanRecorte',
+        description: 'Application for scanning and cropping images quickly and accurately. Developed to facilitate the digitization and processing of documents with efficient tools.'
+      },
+      pdfast: {
+        title: 'PDFast',
+        description: 'Efficient tool for processing and manipulating PDF files. Developed to perform fast operations on documents, focusing on performance and ease of use.'
       }
     }
   }
@@ -771,6 +789,35 @@ function App() {
                 tags={['React', 'UI/UX Design', 'Tailwind CSS']}
                 delay={0.2}
                 link="https://v2dolphin.nedimi.com"
+                linkText={t.visitWeb}
+              />
+            </TiltWrapper>
+          </div>
+
+          <div className="flex items-center justify-center mb-10 mt-16">
+            <h2 className="text-xl md:text-2xl font-extrabold text-slate-800 dark:text-white bg-white/50 dark:bg-slate-900/50 px-8 py-2.5 rounded-full shadow-[0_8px_32px_rgba(31,38,135,0.05),inset_0_1px_1px_rgba(255,255,255,0.7)] border border-white/60 dark:border-slate-800/60 backdrop-blur-md">
+              {t.myRepositoriesTitle}
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <TiltWrapper>
+              <ProjectCard 
+                title={t.projects.scanRecorte.title}
+                description={t.projects.scanRecorte.description}
+                tags={['Python']}
+                delay={0.1}
+                link="https://github.com/Adolfo-McFly/scanRecorte.git"
+                linkText={t.visitWeb}
+              />
+            </TiltWrapper>
+            <TiltWrapper>
+              <ProjectCard 
+                title={t.projects.pdfast.title}
+                description={t.projects.pdfast.description}
+                tags={['Expo (Android)', 'React', 'JavaScript', 'Python']}
+                delay={0.2}
+                link="https://github.com/Adolfo-McFly/PDFast.git"
                 linkText={t.visitWeb}
               />
             </TiltWrapper>
