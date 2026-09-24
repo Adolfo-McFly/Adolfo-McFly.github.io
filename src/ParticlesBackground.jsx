@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 const programmingTerms = [
   '< />', '{ }', '=>', 'div', 'import', 'const', 'function', 'class', '()', ';;',
   'return', 'if', 'else', 'await', 'async', 'try', 'catch', 'let', 'var', 'React',
-  'SQL', 'API', 'JSON', 'NaN', 'undefined', 'null', 'true', 'false', '0101'
+  'SQL', 'API', 'JSON', 'NaN', 'undefined', 'null', 'true', 'false', '0101', 'inner'
 ];
 
 export default function ParticlesBackground() {
@@ -29,7 +29,7 @@ export default function ParticlesBackground() {
   }, []);
 
   const handlePop = (id) => {
-    setParticles(prev => 
+    setParticles(prev =>
       prev.map(p => p.id === id ? { ...p, popping: true } : p)
     );
     // Optional: remove it after animation
@@ -44,7 +44,7 @@ export default function ParticlesBackground() {
       if (e.target.closest('a, button, [role="button"], img, .bg-white, .dark\\:bg-slate-900')) {
         return;
       }
-      
+
       const particleEls = document.querySelectorAll('.particle-el:not(.popping)');
       let minDistance = Infinity;
       let closestId = null;
@@ -52,7 +52,7 @@ export default function ParticlesBackground() {
       particleEls.forEach(el => {
         const rect = el.getBoundingClientRect();
         if (e.clientX >= rect.left && e.clientX <= rect.right &&
-            e.clientY >= rect.top && e.clientY <= rect.bottom) {
+          e.clientY >= rect.top && e.clientY <= rect.bottom) {
           closestId = parseInt(el.getAttribute('data-id'), 10);
         }
       });
